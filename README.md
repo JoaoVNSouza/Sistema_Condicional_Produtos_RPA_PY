@@ -72,12 +72,12 @@ https://www.linkedin.com/in/joaovitornsouza/.
 
 #### **Tela adicionar produto**
 <p align="center">
-  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/adicionar_produto.png" alt="Image" width="650">
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/adicionar_produto.png" alt="Image" width="550">
 </p>
 
 #### **Tela remover produto**
 <p align="center">
-  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/remover_produto.png" alt="Image" width="650">
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/remover_produto.png" alt="Image" width="550">
 </p>
 
 #### **Tela mostrar condicional**
@@ -87,5 +87,5 @@ https://www.linkedin.com/in/joaovitornsouza/.
 
 #### **Tela lixeira**
 <p align="center">
-  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/lixeira%20de%20condicionais.png" alt="Image" width="650">
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/lixeira%20de%20condicionais.png" alt="Image" width="550">
 </p>
