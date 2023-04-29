@@ -56,5 +56,21 @@ https://www.linkedin.com/in/joaovitornsouza/.
 
 ## Screenshots
 
-#### **Telas**: Gerar excel, Cadastrar, Etiquetar.
+#### **Telas**: principal, adicionar peça, remover peça e lixeira.
 
+
+<p align="center">
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/tela_principal.png" alt="Image" width="650">
+</p>
+
+<p align="center">
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/criar_condicional.png" alt="Image">
+</p>
+
+<p align="center">
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/deletar_condicional.png" alt="Image">
+</p>
+
+<p align="center">
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/adicionar_produto.png" alt="Image" width="650">
+</p>
