@@ -59,17 +59,33 @@ https://www.linkedin.com/in/joaovitornsouza/.
 #### **Telas**: principal, adicionar peça, remover peça e lixeira.
 
 
+#### **Tela principal**
 <p align="center">
   <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/tela_principal.png" alt="Image" width="650">
 </p>
 
-
+#### **Tela adicionar e remover condicional**
 <div style="display: flex; justify-content: center; align-items: center;">
   <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/criar_condicional.png" alt="Criar condicional" width=400>
   <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/deletar_condicional.png" alt="Deletar condicional" width=350>
 </div>
 
-
+#### **Tela adicionar produto**
 <p align="center">
   <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/adicionar_produto.png" alt="Image" width="650">
+</p>
+
+#### **Tela remover produto**
+<p align="center">
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/remover_produto.png" alt="Image" width="650">
+</p>
+
+#### **Tela mostrar condicional**
+<p align="center">
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/mostra_condicional.png" alt="Image" width="650">
+</p>
+
+#### **Tela lixeira**
+<p align="center">
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/lixeira%20de%20condicionais.png" alt="Image" width="650">
 </p>
