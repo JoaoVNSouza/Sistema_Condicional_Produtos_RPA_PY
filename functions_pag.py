@@ -295,7 +295,7 @@ def adicionar_produto(arquivo : str, codigo : str, desconto : float, referencia 
                 messagebox.showerror('ERROR', 'ERRO NO PROGRAMA CONTATE O SUPORTE.')      
                     
         else: # Adiciona pelo GA.
-            if referencia and descricao and preco and desconto_ga:
+            if referencia and descricao and preco:
                 #if True:
                 try:
                     # Adiciona uma nova linha no df.
