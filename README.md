@@ -65,8 +65,8 @@ https://www.linkedin.com/in/joaovitornsouza/.
 
 
 <div style="display: flex; justify-content: center; align-items: center;">
-  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/criar_condicional.png" alt="Criar condicional">
-  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/deletar_condicional.png" alt="Deletar condicional">
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/criar_condicional.png" alt="Criar condicional" width=300>
+  <img src="https://github.com/JoaoVNSouza/Sistema_Condicional_Produtos_RPA_PY/blob/main/screenshots/deletar_condicional.png" alt="Deletar condicional" width=300>
 </div>
 
 
