@@ -10,7 +10,6 @@ def geometria_tela(janela: tk, width_janela: int, height_janela: int, desl_y: in
         janela: janela a ser redimensionada.
         width: largura da janela.
         height: altura da janela.
-        desl_y: deslocamento em y.
 
         Retorno:
         Nenhum.
@@ -19,7 +18,7 @@ def geometria_tela(janela: tk, width_janela: int, height_janela: int, desl_y: in
     width_tela = janela.winfo_screenwidth()
     height_tela = janela.winfo_screenheight()
     x = (width_tela // 2) - (width_janela // 2)
-    y = (height_tela // 2) - (height_janela // 2) - desl_y   # deslocamenteo em y.
+    y = (height_tela // 2) - (height_janela // 2) - desl_y   # - 50 central.
 
     janela.geometry('{}x{}+{}+{}'.format(width_janela, height_janela, x, y))
 

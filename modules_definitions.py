@@ -32,11 +32,11 @@ pag.PAUSE = 0.2
 # Interrompe automação pag.
 pag.FAILSAFE = True
 # Endereço imagens.
-path_img = """Diretório com as imagens"""
+path_img = r'C:\Sistemas\Condicionais\img'
 # Endereço condicionais apagados.
-path_lixeira = """Diretório da lixeira"""
+path_lixeira = r'C:\Sistemas\Condicionais\lixeira'
 # Endereço condicionais.
-path_condicional = """Diretório dos condicionais (.xlsx)"""
+path_condicional = r'C:\Sistemas\Condicionais\arquivos_condicionais'
 # Pasta padrão.
 os.chdir(path_condicional)
 # Data atual.

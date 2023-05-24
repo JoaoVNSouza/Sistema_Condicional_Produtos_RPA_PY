@@ -50,9 +50,11 @@ def criar_condicional(lista_arquivos : list) -> None: # Função para criar um n
     if nome_cliente:
         planilha = Workbook()                                           # Cria uma nova planilha vazia.
         arquivo = f'{nome_cliente} - {atual.strftime("%d_%m_%Y")}.xlsx' # Define o nome + a data atual.
-
+        
         novo_arquivo = arquivo
+        
         if os.path.exists(arquivo):                  # Verifica se o arquivo já existe no condicional.
+            pag.alert('Entrou')
             nome, data = arquivo.split(' - ')
             i = 1
             while True: # Adiciona um número no final do nome até não existir um igual.
@@ -237,7 +239,7 @@ def save_dataframe_to_excel(df, filename : str) -> None: # Converte o dataframe 
     planilha.save(filename)
 
 
-def adicionar_produto(arquivo : str, codigo : str, desconto : float, referencia : str, descricao : str, preco : str, desconto_ga : float, window_adicionar : tk) -> None: # Adiciona o produto no condicional.
+def adicionar_produto(arquivo : str, entry_codigo, entry_desconto, entry_referencia, entry_descricao, entry_preco, entry_desconto_ga, window_adicionar : tk) -> None: # Adiciona o produto no condicional.
     """
         Adiciona o produto no condicional.
 
@@ -256,7 +258,12 @@ def adicionar_produto(arquivo : str, codigo : str, desconto : float, referencia 
     
     #if True:
     try:
-        window_adicionar.destroy()  # Fecha a janela após apertar no btn adicionar.
+        codigo = entry_codigo.get()
+        desconto = float(entry_desconto.get())
+        referencia = entry_referencia.get()
+        descricao = entry_descricao.get()
+        preco = entry_preco.get()
+        desconto_ga = float(entry_desconto_ga.get())
 
         arquivo = f'{arquivo}.xlsx' # Adiciona '.xlsx' no nome do arquivo.
 
@@ -265,36 +272,43 @@ def adicionar_produto(arquivo : str, codigo : str, desconto : float, referencia 
     
         if codigo: # Adiciona pelo código de barras.
             try:
-                codigo = codigo[7:12] # Formata o código de barras para o código cadastrado no RETAGUARDA.
+                if len(codigo) == 13 and codigo[0:3] == '700': # O código de barras é do sistema RETAGUARDA.
+                    codigo = codigo[7:12] # Formata o código de barras para o código cadastrado no RETAGUARDA.
 
-                if len(df) > 0 and codigo in df['Código'].dropna().tolist():
-                    messagebox.showwarning('AVISO', 'Esse produto já está inserido no condicional!')
-                    return
+                    if len(df) > 0 and codigo in df['Código'].dropna().tolist():
+                        messagebox.showwarning('AVISO', 'Esse produto já está inserido no condicional!')
+                        return
 
-                # Abre o sitema, desativa caps lock e deixa na tela principal.
-                VerificaTelaInicial()
+                    # Abre o sitema, desativa caps lock e deixa na tela principal.
+                    VerificaTelaInicial()
 
-                # Pegar os dados do produto.
-                try:
-                    referencia, descricao, marca, preco, status = dados_produto(codigo)
-                except:
-                    messagebox.showerror('ERROR', 'FALHA AO TENTAR PEGAR AS INFORMAÇÕES\n DO PRODUTO NO SISTEMA RETAGUARDA.') 
-                    return
+                    # Pegar os dados do produto.
+                    try:
+                        referencia, descricao, marca, preco, status = dados_produto(codigo)
+                    except:
+                        messagebox.showerror('ERROR', 'FALHA AO TENTAR PEGAR AS INFORMAÇÕES\n DO PRODUTO NO SISTEMA RETAGUARDA.') 
+                        return
 
-                # Adiciona uma nova linha no df.
-                nova_linha = {'Código': codigo, 'Referência': referencia, 'Descrição': descricao,
-                              'Marca': marca, 'Preço': preco, 'Desconto': desconto/100, 'Status': status}                
-                df = pd.concat([df, pd.DataFrame([nova_linha])], ignore_index=True)
-                df.index += 1 # Altera o índice.
+                    # Adiciona uma nova linha no df.
+                    nova_linha = {'Código': codigo, 'Referência': referencia, 'Descrição': descricao,
+                                'Marca': marca, 'Preço': preco, 'Desconto': desconto/100, 'Status': status}                
+                    df = pd.concat([df, pd.DataFrame([nova_linha])], ignore_index=True)
+                    df.index += 1 # Altera o índice.
 
-                save_dataframe_to_excel(df, arquivo) # Converte o df para um arquivo excel mantendo a formatação.
-                
-                messagebox.showinfo('SUCESSO', 'Item adicionado ao condicional.')
-
+                    save_dataframe_to_excel(df, arquivo) # Converte o df para um arquivo excel mantendo a formatação.
+                    
+                    rst = messagebox.askyesno('SUCESSO', f'Item adicionado ao condicional.   Peças: {len(df)}\n\n\tDeseja adicionar mais?')
+                    if rst:
+                        limpar_campos(entry_codigo, entry_desconto, entry_referencia, entry_descricao, entry_preco, entry_desconto_ga)  # Limpa os campos da janela
+                    else:
+                        window_adicionar.destroy()  # Fecha a janela após apertar no btn adicionar.
+                else:
+                    messagebox.showwarning('ALERTA', 'O código de barras escaneado não foi encontrado.\n\n      Escanear corretamente a etiqueta da loja!')
+                    limpar_campos(entry_codigo, entry_desconto, entry_referencia, entry_descricao, entry_preco, entry_desconto_ga)  # Limpa os campos da janela
             except:
                 messagebox.showerror('ERROR', 'ERRO NO PROGRAMA CONTATE O SUPORTE.')      
                     
-        else: # Adiciona pelo GA.
+        else: # Adiciona pelo GATOS & ATOS.
             if referencia and descricao and preco:
                 #if True:
                 try:
@@ -305,14 +319,18 @@ def adicionar_produto(arquivo : str, codigo : str, desconto : float, referencia 
 
                     save_dataframe_to_excel(df, arquivo)
 
-                    messagebox.showinfo('SUCESSO', 'Item adicionado ao condicional.')
+                    rst = messagebox.askyesno('SUCESSO', 'Item adicionado ao condicional.\n\nDeseja adicionar mais?')
+                    if rst:
+                        limpar_campos(entry_codigo, entry_desconto, entry_referencia, entry_descricao, entry_preco, entry_desconto_ga)  # Limpa os campos da janela
+                    else:
+                        window_adicionar.destroy()  # Fecha a janela após apertar no btn adicionar.
                 except:
                     messagebox.showerror('ERROR', 'ERRO NO PROGRAMA CONTATE O SUPORTE.')
     except:
         messagebox.showerror('ERROR', 'ERRO NO PROGRAMA CONTATE O SUPORTE.')
 
 
-def remover_produto(arquivo : str, codigo : str, window_remover : tk) -> None: # Função para remover o produto do condicional.
+def remover_produto(arquivo : str, entry_codigo, window_remover : tk) -> None: # Função para remover o produto do condicional.
     """
         Remove o produto do condicional.
 
@@ -325,8 +343,7 @@ def remover_produto(arquivo : str, codigo : str, window_remover : tk) -> None: #
             None
     """
     
-    # Fecha a janela após apertar no btn remover o produto.
-    window_remover.destroy()
+    codigo = entry_codigo.get()                 # Pega o código.
 
     if codigo:
         try:
@@ -334,28 +351,41 @@ def remover_produto(arquivo : str, codigo : str, window_remover : tk) -> None: #
             wb = openpyxl.load_workbook(arquivo) # Carrega a planilha.
             ws = wb.active                       # Define a aba ativada.
             codigo_encontrado = False            # Variável para verificar se o código foi encontrado.
-
-            rst = True                           # Variável para verificar se o produto já tinha sido removido.
+            prod_removido = True                 # Variável para verificar se o produto já tinha sido removido.
+            
             for row in ws.iter_rows(min_row=2):
                 if str(row[1].value) == codigo:
                     if row[7].value == 'OFF':
-                        rst = False
-                        break # Testar
+                        prod_removido = False
                     for cell in row:
+                        # Tachar linhas.
+                        """
                         if cell.column != 1 and cell.column != ws.max_column:
                             cell.font = Font(strikethrough=True) # tacha a fonte da célula
                         elif cell.column == ws.max_column and cell.value == "ON": 
-                            cell.value = "OFF" # substitui o valor "ON" por "OFF"
-                    codigo_encontrado = True  # código encontrado
+                            cell.value = "OFF"  # substitui o valor "ON" por "OFF"
+                        """
+                        if cell.column == ws.max_column and cell.value == "ON": 
+                            cell.value = "OFF"  # substitui o valor "ON" por "OFF"
+                    codigo_encontrado = True    # código encontrado
+                    break
 
-            if codigo_encontrado:  # se o código foi encontrado, salva e mostra mensagem de sucesso
+            if codigo_encontrado:  # Se o código foi encontrado.
                 wb.save(arquivo)  # Salva a planilha atualizada.
-                if rst:
-                    messagebox.showinfo('SUCESSO', 'Produto removido com sucesso.')
-                else:
-                    messagebox.showinfo('AVISO', 'Produto já tinha sido removido anteriormente.')
 
-            else:  # se o código não foi encontrado, mostra mensagem de falha.
+                if prod_removido: # O produto foi removido.
+                    rst = messagebox.askyesno('SUCESSO', 'Item removido do condicional.\n\n     Deseja remover mais?')
+                else:             # O produto já estava OFF.
+                    rst = messagebox.askyesno('AVISO', 'Produto já tinha sido removido anteriormente.\n\n\tDeseja tentar remover outro?')
+                
+                if rst:
+                    # Limpa os campos da janela.
+                    entry_codigo.delete(0, tk.END)
+                    entry_codigo.focus_set()
+                else:
+                    window_remover.destroy()  # Fecha a janela após apertar no btn adicionar.
+
+            else:  # Se o código não foi encontrado.
                 messagebox.showerror('FALHA', 'Código do produto não encontrado.')
         except:
             messagebox.showerror('ERROR', 'ERRO NO PROGRAMA CONTATE O SUPORTE.')
@@ -391,16 +421,16 @@ def fechar_condicional(arquivo : str, self : tk) -> None: # Função para Fechar
                     # Abre o sitema, desativa caps lock e deixa na tela principal.
                     VerificaTelaInicial()
 
-                    # Lista contendo todos os códigos exceto "ga".
+                    # Lista contendo todos os códigos exceto "GATOS".
                     codigo_list = df['Código'].dropna().tolist()
 
                     # Verifica se tem produtos 'GA' no condicional.
-                    ga_on = ((df['Marca'] == 'GA') & (df['Status'] == 'ON')).sum() > 0
+                    gatos_on = ((df['Marca'] == 'GA') & (df['Status'] == 'ON')).sum() > 0
 
                     if len(codigo_list) > 0: # Se existir produtos 'ON' com código.
                         pag.press('f5') # Abre o ORÇAMENTO.
 
-                        if ga_on: # Faz ORÇAMENTO se tiver ga 'ON'.
+                        if gatos_on: # Faz ORÇAMENTO se tiver GATOS 'ON'.
                             pag.click(x=833, y=154)
 
                         for cod in codigo_list:  # Lança cada peça no RETAGUARDA.
@@ -408,9 +438,9 @@ def fechar_condicional(arquivo : str, self : tk) -> None: # Função para Fechar
                             for _ in range(4):
                                 pag.press('enter')
 
-                    if ga_on: # AVISO falta os prod ga.
+                    if gatos_on: # AVISO falta os prod gatos.
                         self.iconify()
-                        messagebox.showinfo('AVISO', 'Existe produtos ga para cadastrar e adicionar ao lançamento!')
+                        messagebox.showinfo('AVISO', 'Existe produtos GATOS para cadastrar e adicionar ao lançamento!')
                     else:
                         self.iconify()
                         messagebox.showinfo('AVISO', 'Todas as peças do condicional foram lançadas! Agora feche a nota.')
@@ -554,6 +584,16 @@ def atualiza_lista_arquivos(lista_arquivos : list, endereco : str = '') -> None:
     lista_arquivos.delete(0, tk.END) # Limpa a lista atual.
 
     # Adiciona os arquivos ordenados na lista.
-    [lista_arquivos.insert(tk.END, arquivo.split('.')[0]) for arquivo in arquivos]
+    [lista_arquivos.insert(tk.END, arquivo.split('.xlsx')[0]) for arquivo in arquivos]
 
 
+def limpar_campos(entry_codigo, entry_desconto, entry_referencia, entry_descricao, entry_preco, entry_desconto_ga): # Função para limpar os campos de uma janela.
+    entry_codigo.delete(0, tk.END)
+    entry_codigo.focus_set()
+    entry_desconto.delete(0, tk.END)
+    entry_desconto.insert(0, '0')  # definir valor padrão como 0
+    entry_referencia.delete(0, tk.END)
+    entry_descricao.delete(0, tk.END)
+    entry_preco.delete(0, tk.END)
+    entry_desconto_ga.delete(0, tk.END)
+    entry_desconto_ga.insert(0, '0')  # definir valor padrão como 0

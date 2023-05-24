@@ -52,6 +52,7 @@ class App(tk.Tk): # Classe das telas.
         btn_mostrarCond.bind('<Enter>', on_enter)
         btn_mostrarCond.bind('<Leave>', on_leave)
         btn_mostrarCond.pack(side='left', padx=12)
+        self.bind('<Return>', lambda event: btn_mostrarCond.invoke())
 
         btn_delCond = tk.Button(frame_botoes, text='Deletar condicional', command=lambda: deletar_condicional(lista_arquivos), bg=COR_BOTAO_FUNDO,
                                 fg=COR_BOTAO_FONTE, font=FONTE_BTN, padx=10, pady=5, bd=0)
@@ -87,6 +88,7 @@ class App(tk.Tk): # Classe das telas.
         imagem = imagem.resize((60, 60))          # Redimensionar a imagem se necessário.
         icone = ImageTk.PhotoImage(imagem)
 
+        # ATENÇÃO NO QUE ESTÁ PASSANDO PARA tela_lixeira
         btn_lixeira = tk.Button(self, image=icone, command=lambda: self.tela_lixeira(lista_arquivos), bg=COR_BOTAO_FUNDO,
                                 fg=COR_BOTAO_FONTE, font=FONTE_BTN, padx=10, pady=5, bd=0)
         btn_lixeira.bind('<Enter>', on_enter)
@@ -107,25 +109,26 @@ class App(tk.Tk): # Classe das telas.
         
         # Criar self.
         window_remover = tk.Toplevel(self)
+        #window_remover.geometry('610x430+330+120')
         geometria_tela(window_remover, 600, 500, 35) 
         window_remover.title('Remover produto')
         window_remover.iconbitmap(f'{path_img}/janela_icon.ico')
         window_remover.configure(bg=COR_FUNDO2)
 
-        df_ga = df.loc[df['Marca'] == 'GA']              # Filtrar apenas produtos 'GA'.
+        df_gatos = df.loc[df['Marca'] == 'GA']              # Filtrar apenas produtos 'GA'.
         colunas = ['Referência', 'Descrição', 'Preço', 'Desconto', 'Status'] # Lista de colunas a serem exibidas no Treeview.
-        df_ga = df_ga[colunas]                        # Seleciona apenas as colunas importantes.
-        df_ga['Desconto'] = df_ga['Desconto'] * 100   # Muda a porcentagem corretamente.
+        df_gatos = df_gatos[colunas]                        # Seleciona apenas as colunas importantes.
+        df_gatos['Desconto'] = df_gatos['Desconto'] * 100   # Muda a porcentagem corretamente.
 
         # Espaço vazio.
         espaco_vazio = tk.Frame(window_remover, height=1, bg=COR_FUNDO2)
-        espaco_vazio.grid(row=0, column=0, padx=15, pady=5, sticky=tk.W)
+        espaco_vazio.grid(row=0, column=0, padx=1, pady=5, sticky=tk.W)
 
         # Código.
         label_codigo = tk.Label(window_remover, text='Escanear o código \nde barras do produto', font=FONTE_GERAL, bg=COR_FUNDO2)
         label_codigo.grid(row=1, column=1, padx=30, pady=5, sticky=tk.W)
 
-        entry_codigo = tk.Entry(window_remover, width=30)
+        entry_codigo = tk.Entry(window_remover, width=40)
         entry_codigo.grid(row=1, column=2)
         entry_codigo.focus_set()
 
@@ -133,9 +136,12 @@ class App(tk.Tk): # Classe das telas.
         espaco_vazio = tk.Frame(window_remover, height=1, bg=COR_FUNDO2)
         espaco_vazio.grid(row=2, column=1, padx=10, pady=5, sticky=tk.W)
 
-        # Texto GA.
-        label_ga = tk.Label(window_remover, text='GA', font=FONTE_TITULO, bg=COR_FUNDO2)
-        label_ga.grid(row=3, column=1, pady=10, sticky=tk.E)
+        # Texto GATOS & ATOS.
+        label_gatos = tk.Label(window_remover, text='GATOS ', font=FONTE_TITULO, bg=COR_FUNDO2)
+        label_gatos.grid(row=3, column=1, pady=10, sticky=tk.E)
+
+        label_atos = tk.Label(window_remover, text='& ATOS', font=FONTE_TITULO, bg=COR_FUNDO2)
+        label_atos.grid(row=3, column=2, pady=10, sticky=tk.W)
 
         # Criar o Treeview para exibir a lista de produtos.
         lista_produtos = ttk.Treeview(window_remover, columns=colunas, show='headings')
@@ -152,7 +158,7 @@ class App(tk.Tk): # Classe das telas.
                 lista_produtos.column(col, width=80, anchor='center')
 
         # Adicionar os produtos ao Treeview.
-        for index, row in df_ga.iterrows():
+        for index, row in df_gatos.iterrows():
             lista_produtos.insert('', 'end', text=index, values=row[colunas].tolist())
 
         # Espaço vazio.
@@ -160,10 +166,11 @@ class App(tk.Tk): # Classe das telas.
         espaco_vazio.grid(row=5, column=1, padx=10, pady=1, sticky=tk.W)
 
         # Botão remover e cancelar.
+        # Botões botões.
         frame_botoes = tk.Frame(window_remover, bg=COR_FUNDO2)
         frame_botoes.grid(row=6, columnspan=3, padx=90, pady=30) # Frame de botões.
 
-        btn_remover = tk.Button(frame_botoes, text='Remover', width=10, command=lambda: remover_produto(arquivo, entry_codigo.get(), window_remover), bg=COR_BOTAO_FUNDO, fg=COR_BOTAO_FONTE, padx=10, pady=5, bd=0, font=FONTE_BTN)
+        btn_remover = tk.Button(frame_botoes, text='Remover', width=10, command=lambda: remover_produto(arquivo, entry_codigo, window_remover), bg=COR_BOTAO_FUNDO, fg=COR_BOTAO_FONTE, padx=10, pady=5, bd=0, font=FONTE_BTN)
         btn_remover.bind('<Enter>', on_enter)
         btn_remover.bind('<Leave>', on_leave)
         btn_remover.pack(side='left', padx=45)
@@ -198,7 +205,7 @@ class App(tk.Tk): # Classe das telas.
 
             # Atualizar dataframe
             referencia = lista_produtos.item(item, 'text')
-            df_ga.loc[referencia, coluna] = valor
+            df_gatos.loc[referencia, coluna] = valor
             df.loc[referencia, coluna] = valor
 
             save_dataframe_to_excel(df, arquivo)
@@ -209,10 +216,11 @@ class App(tk.Tk): # Classe das telas.
 
     def tela_adicionar(self, arquivo): # Tela "Adicionar Produto"
         
-        largura_entry = 30
+        largura_entry = 40
 
         # Nova tela adicionar produtos.
         window_adicionar = tk.Toplevel(self)
+        #window_adicionar.geometry('590x400+330+150')
         geometria_tela(window_adicionar, 600, 500, 35) 
         window_adicionar.title('Adicionar Produto')
         window_adicionar.iconbitmap(f'{path_img}/janela_icon.ico')
@@ -249,9 +257,12 @@ class App(tk.Tk): # Classe das telas.
         espaco_vazio = tk.Frame(window_adicionar, height=35, bg=COR_FUNDO2)
         espaco_vazio.grid(row=4, column=1, sticky=tk.W)
 
-        # Texto ga
-        label_ga = tk.Label(window_adicionar, text='GA', font=FONTE_TITULO, bg=COR_FUNDO2)
-        label_ga.grid(row=5, column=1, pady=2, sticky=tk.E)
+        # Texto GATOS & ATOS.
+        label_gatos = tk.Label(window_adicionar, text='GATOS', font=FONTE_TITULO, bg=COR_FUNDO2)
+        label_gatos.grid(row=5, column=1, pady=2, sticky=tk.E)
+
+        label_atos = tk.Label(window_adicionar, text='& ATOS', font=FONTE_TITULO, bg=COR_FUNDO2)
+        label_atos.grid(row=5, column=2, pady=2, sticky=tk.W)
         
         # Referência
         label_referencia = tk.Label(window_adicionar, text='Referência',font=FONTE_GERAL, bg=COR_FUNDO2)
@@ -284,11 +295,12 @@ class App(tk.Tk): # Classe das telas.
 
         # Botões botões.
         frame_botoes = tk.Frame(window_adicionar, bg=COR_FUNDO2)
-        frame_botoes.grid(row=10, columnspan=3, padx=110, pady=20) # Frame de botões.
+        frame_botoes.grid(row=10, columnspan=3, padx=90, pady=20) # Frame de botões.
 
-        btn_adicionar = tk.Button(frame_botoes, text='Adicionar', width=8, command=lambda: adicionar_produto(arquivo, entry_codigo.get(), float(entry_desconto.get()), entry_referencia.get(), entry_descricao.get(), entry_preco.get(), float(entry_desconto_ga.get()), window_adicionar), bg=COR_BOTAO_FUNDO, fg=COR_BOTAO_FONTE, padx=10, pady=5, bd=0, font=FONTE_BTN)
+        btn_adicionar = tk.Button(frame_botoes, text='Adicionar', width=8, command=lambda: adicionar_produto(arquivo, entry_codigo, entry_desconto, entry_referencia, entry_descricao, entry_preco, entry_desconto_ga, window_adicionar), bg=COR_BOTAO_FUNDO, fg=COR_BOTAO_FONTE, padx=10, pady=5, bd=0, font=FONTE_BTN)
         btn_adicionar.bind('<Enter>', on_enter)
         btn_adicionar.bind('<Leave>', on_leave)
+        #btn_adicionar.bind('<Button-1>', lambda event: btn_adicionar.invoke())
         btn_adicionar.pack(side='left', padx=45)
         window_adicionar.bind('<Return>', lambda event: btn_adicionar.invoke())
 
@@ -297,6 +309,10 @@ class App(tk.Tk): # Classe das telas.
         btn_cancelar.bind('<Leave>', on_leave)
         btn_cancelar.pack(side='left', padx=45)
         window_adicionar.bind('<Escape>', lambda event: btn_cancelar.invoke())
+
+        #window_adicionar.transient(self)
+        #window_adicionar.grab_set()
+        #self.wait_window(window_adicionar)
 
 
     def tela_lixeira(self, lista_arquivos): # Tela "Lixeira"
@@ -309,6 +325,7 @@ class App(tk.Tk): # Classe das telas.
             
                 # Cria uma nova self topLevel.
                 window_lixeira = tk.Toplevel(self)
+                #window_lixeira.geometry('800x500+300+120')
                 geometria_tela(window_lixeira, 600, 570, 35)
                 window_lixeira.title('Condicionais Apagados')
                 window_lixeira.iconbitmap(f'{path_img}/janela_icon.ico')
@@ -351,6 +368,7 @@ class App(tk.Tk): # Classe das telas.
                 btn_restaurar.bind('<Enter>', on_enter)
                 btn_restaurar.bind('<Leave>', on_leave)
                 btn_restaurar.pack(side='left', padx=10)
+                btn_restaurar.bind('<Button-1>', lambda event: btn_restaurar.invoke())
                 window_lixeira.bind('<Return>', lambda event: btn_restaurar.invoke())
 
                 # Botão para apagar um único condicional.
